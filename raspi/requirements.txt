@@ -1,0 +1,9 @@
+pyserial
+pyserial-asyncio
+aiosqlite
+pandas
+scikit-learn
+joblib
+numpy
+schedule
+python-telegram-bot

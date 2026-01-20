@@ -1,0 +1,41 @@
+# Smart Plant Project Setup Instructions
+
+## 1. Arduino Setup
+1.  **Wire the Hardware**:
+    - **DHT11 (Temperature & Humidity)**: Connect the data pin to Digital Pin 2.
+    - **Soil Moisture Sensor**: Connect the analog output pin to Analog Pin A0.
+    - **Photocell (Light Sensor)**: Connect the analog output pin to Analog Pin A1.
+    - **LM35 (Temperature Sensor)**: Connect the Vout pin to Analog Pin A2.
+    - **Power & Ground**: Connect all sensor VCC pins to the Arduino's 5V pin and all GND pins to the Arduino's Ground (GND) pin.
+2.  Install the Arduino IDE.
+3.  Install the `Adafruit Unified Sensor` and `DHT sensor library` via the Library Manager.
+4.  Open `arduino/smart_plant_sensors/smart_plant_sensors.ino`.
+5.  Select your Arduino board and port.
+6.  Upload the sketch to the Arduino.
+
+## 2. Raspberry Pi Setup
+1.  Navigate to the `raspi` directory:
+    ```bash
+    cd raspi
+    ```
+2.  (Optional) Create a virtual environment:
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    ```
+3.  Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+## 3. Running the System
+1.  Ensure the Arduino is connected via USB.
+2.  Check the `raspi/src/config.py` file to verify the serial port matches your system (e.g., `COM3` on Windows or `/dev/ttyACM0` on Linux/Pi).
+3.  Run the main script:
+    ```bash
+    python main.py
+    ```
+
+## 4. Notes
+- The system defaults to using a local SQLite database `plant_data.db` created in the `raspi` folder.
+- Model training happens automatically on a schedule defined in `main.py`, or you can trigger logic manually if you modify the code.

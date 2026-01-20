@@ -1,0 +1,17 @@
+Sensors:
+- Soil Humidity Sensor (soil moisture)
+- Temperature Sensors (LM35 and Temperature & Humidity Module)
+- Humidity (from the Temperature & Humidity Module)
+- Photocell Sensor (light intensity)
+
+
+* “Imagine you have a thirsty plant. You want to water it just the right amount — not too much, not too little. But every day is different. Sometimes it’s hot and dry, sometimes cool and humid.
+* Our system watches the plant’s soil and the weather all day long. It learns how fast the soil dries depending on the temperature and humidity — like a plant’s smart brain.
+* Then, it tells the farmer exactly when to water, saving water and keeping the plant healthy.
+
+For example:
+	- Yesterday, watering at 10 AM kept the plant happy all day.
+	- Today, it’s hotter, so the soil dries faster. The system learns this and says:
+		‘Water now, or the plant will get thirsty.’
+		Tomorrow, it might be cooler and more humid, so it says: ‘Wait, no need to water yet.’**
+	- This smart learning happens all by itself, without internet or the farmer having to guess. It saves water, time, and helps crops grow better.”
