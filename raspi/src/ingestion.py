@@ -38,7 +38,7 @@ class DataIngestion:
         while self.running:
             try:
                 if self.serial_connection.in_waiting > 0:
-                    line = self.serial_connection.readline().decode('utf-8').strip()
+                    line = self.serial_connection.readline().decode('utf-8', errors='replace').strip()
                     if line:
                         try:
                             data = json.loads(line)
