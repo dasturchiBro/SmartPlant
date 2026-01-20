@@ -13,7 +13,7 @@ from src.explainability import ExplainabilityModule
 from src.bot import SmartPlantBot
 from src import config
 
-# Setup logging
+# Setup logging NEW
 logging.basicConfig(
     stream=sys.stdout,
     level=logging.DEBUG,
