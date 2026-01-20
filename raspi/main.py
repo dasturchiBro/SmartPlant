@@ -44,6 +44,12 @@ def run_prediction_job(db_manager, predictor):
     except Exception as e:
         logger.error(f"Prediction job failed: {e}")
 
+def scheduler_loop():
+    """Background thread for scheduled tasks."""
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
 def main():
     logger.info("Starting Smart Plant Monitoring System...")
     
@@ -62,11 +68,6 @@ def main():
     ingestion_thread.daemon = True
     ingestion_thread.start()
 
-    # Start Telegram Bot in a separate thread
-    bot_thread = threading.Thread(target=bot.run)
-    bot_thread.daemon = True
-    bot_thread.start()
-
     # Schedule Jobs
     # Schedule training once a day
     schedule.every(config.TRAINING_INTERVAL_MINUTES).minutes.do(run_training_job, trainer)
@@ -74,16 +75,20 @@ def main():
     # Schedule prediction every N minutes
     schedule.every(config.PREDICTION_INTERVAL_SECONDS).seconds.do(run_prediction_job, db_manager, predictor)
 
-    logger.info("System initialized. Running main loop...")
+    # Start Scheduler in a separate thread
+    scheduler_thread = threading.Thread(target=scheduler_loop)
+    scheduler_thread.daemon = True
+    scheduler_thread.start()
 
+    logger.info("System initialized. Starting Bot (Main Thread)...")
+
+    # Run Telegram Bot in MAIN Thread (Blocking)
     try:
-        while True:
-            schedule.run_pending()
-            time.sleep(1)
+        bot.run()
     except KeyboardInterrupt:
         logger.info("Stopping system...")
+    finally:
         ingestor.stop()
-        ingestion_thread.join()
         logger.info("System stopped.")
 
 if __name__ == "__main__":
