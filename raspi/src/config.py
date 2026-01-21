@@ -1,12 +1,12 @@
 import os
 
 # Serial Configuration
-# SERIAL_PORT = '/dev/ttyACM0'  # Default for Raspberry Pi, might need adjustment (e.g. COM3 on Windows)
-SERIAL_PORT = 'COM5'  # Default for Raspberry Pi, might need adjustment (e.g. COM3 on Windows)
+SERIAL_PORT = '/dev/ttyACM0'  # Default for Raspberry Pi, might need adjustment
+# SERIAL_PORT = 'COM6'  # Default for Raspberry Pi, might need adjustment (e.g. COM3 on Windows)
 BAUD_RATE = 9600
 
 # Database Configuration
-DB_NAME = 'plant_data_v2.db'
+DB_NAME = 'plant_data_v3.db'
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), DB_NAME)
 
 # Model Configuration

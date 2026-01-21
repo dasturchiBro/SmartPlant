@@ -11,6 +11,7 @@ from src.prediction import Predictor
 from src.prediction import Predictor
 from src.explainability import ExplainabilityModule
 from src.bot import SmartPlantBot
+from src.automation import AutomationController
 from src import config
 
 # Setup logging NEW
@@ -61,12 +62,24 @@ def main():
     # Predictor loads model, so might be None initially if no model exists
     predictor = Predictor(preprocessor, explainer) 
     ingestor = DataIngestion(db_manager)
-    bot = SmartPlantBot(db_manager, ingestor)
+    
+    # Initialize automation controller
+    automation = AutomationController(db_manager, ingestor)
+    
+    # Initialize bot with automation controller
+    bot = SmartPlantBot(db_manager, ingestor, automation)
 
     # Start Data Ingestion in a separate thread
     ingestion_thread = threading.Thread(target=ingestor.start_listening)
     ingestion_thread.daemon = True
     ingestion_thread.start()
+
+    # Start Automation Controller
+    automation.start()
+    
+    # Sync initial settings to Arduino after connection
+    time.sleep(3)  # Wait for Arduino to be ready
+    automation.sync_settings_to_arduino()
 
     # Schedule Jobs
     # Schedule training once a day
@@ -88,6 +101,7 @@ def main():
     except KeyboardInterrupt:
         logger.info("Stopping system...")
     finally:
+        automation.stop()
         ingestor.stop()
         logger.info("System stopped.")
 

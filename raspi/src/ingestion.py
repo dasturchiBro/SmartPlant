@@ -40,18 +40,29 @@ class DataIngestion:
                 if self.serial_connection.in_waiting > 0:
                     line = self.serial_connection.readline().decode('utf-8', errors='replace').strip()
                     if line:
+                        logger.debug(f"Raw serial data: {line}")
                         try:
                             data = json.loads(line)
-                            soil = data.get('soil')
-                            temp = data.get('temp')
-                            hum = data.get('hum')
-                            light = data.get('light', 0)
-                            temp_lm35 = data.get('temp_lm35', 0.0)
-                            water_level = data.get('water_level', 0)
+                            logger.debug(f"JSON parsed: {data}")
                             
-                            if soil is not None and temp is not None:
-                                self.db_manager.insert_sensor_data(soil, temp, hum, light, temp_lm35, water_level)
-                                logger.debug(f"Saved data: {data}")
+                            # Parse new data structure with 3 soil sensors
+                            soil1 = data.get('soil1', 0)
+                            soil2 = data.get('soil2', 0)
+                            soil3 = data.get('soil3', 0)
+                            soil_avg = data.get('soil_avg', 0)
+                            temp = data.get('temp', 0)
+                            hum = data.get('hum', 0)
+                            water_level = data.get('water_level', 0)
+                            fan_status = data.get('fan_status', 0)
+                            heater_status = data.get('heater_status', 0)
+                            
+                            if soil1 is not None and temp is not None:
+                                self.db_manager.insert_sensor_data(
+                                    soil1, soil2, soil3, soil_avg, 
+                                    temp, hum, 0, water_level, 
+                                    fan_status, heater_status
+                                )
+                                logger.info(f"Successfully saved reading to DB: T={temp}, S1={soil1}")
                         except json.JSONDecodeError:
                             logger.warning(f"Received malformed JSON-like data: {line}")
             except serial.SerialException as e:
@@ -65,11 +76,11 @@ class DataIngestion:
             time.sleep(config.DATA_READ_INTERVAL_SECONDS)
 
     def write_command(self, command):
-        """Writes a command string/char to the serial port."""
+        """Writes a command string to the serial port."""
         if self.serial_connection and self.serial_connection.is_open:
             try:
-                # Encode string to bytes
-                self.serial_connection.write(command.encode('utf-8'))
+                # Encode string to bytes and add newline
+                self.serial_connection.write(f"{command}\n".encode('utf-8'))
                 logger.info(f"Sent command to Arduino: {command}")
                 return True
             except Exception as e:
@@ -77,6 +88,41 @@ class DataIngestion:
                 return False
         else:
             logger.warning("Serial connection not open. Cannot send command.")
+            return False
+
+    def send_settings_to_arduino(self, settings):
+        """Send all relevant settings to Arduino."""
+        try:
+            # Send threshold settings
+            self.write_command(f"SET_SOIL_THRESH:{settings.get('soil_threshold', 500)}")
+            time.sleep(0.1)
+            self.write_command(f"SET_FAN_TEMP:{settings.get('fan_temp_threshold', 28.0)}")
+            time.sleep(0.1)
+            self.write_command(f"SET_HEATER_TEMP:{settings.get('heater_temp_threshold', 18.0)}")
+            time.sleep(0.1)
+            
+            # Send automation flags
+            if settings.get('auto_water_enabled') == '1':
+                self.write_command("AUTO_WATER_ON")
+            else:
+                self.write_command("AUTO_WATER_OFF")
+            time.sleep(0.1)
+            
+            if settings.get('auto_fan_enabled') == '1':
+                self.write_command("AUTO_FAN_ON")
+            else:
+                self.write_command("AUTO_FAN_OFF")
+            time.sleep(0.1)
+            
+            if settings.get('auto_heater_enabled') == '1':
+                self.write_command("AUTO_HEATER_ON")
+            else:
+                self.write_command("AUTO_HEATER_OFF")
+            
+            logger.info("Settings synced to Arduino")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to send settings to Arduino: {e}")
             return False
 
     def stop(self):
