@@ -2,6 +2,7 @@ import serial
 import json
 import time
 import logging
+import threading
 from . import config
 
 logger = logging.getLogger(__name__)
@@ -11,6 +12,7 @@ class DataIngestion:
         self.db_manager = db_manager
         self.serial_connection = None
         self.running = False
+        self._write_lock = threading.Lock()
     
     def connect_serial(self):
         """Attempt to connect to the serial port."""
@@ -28,14 +30,21 @@ class DataIngestion:
 
     def start_listening(self):
         """Main loop to read from serial and save to DB."""
-        if not self.serial_connection:
-            if not self.connect_serial():
-                return
-
         self.running = True
-        logger.info("Started listening for sensor data...")
+        logger.info("Started listening for sensor data thread...")
         
         while self.running:
+            # 1. Ensure serial is connected
+            if not self.serial_connection or not self.serial_connection.is_open:
+                logger.info(f"Attempting to connect to serial port {config.SERIAL_PORT}...")
+                if self.connect_serial():
+                    logger.info("Successfully connected/reconnected to serial.")
+                else:
+                    logger.error(f"Failed to connect to {config.SERIAL_PORT}. Retrying in 5 seconds...")
+                    time.sleep(5)
+                    continue
+
+            # 2. Read data
             try:
                 if self.serial_connection.in_waiting > 0:
                     line = self.serial_connection.readline().decode('utf-8', errors='replace').strip()
@@ -45,7 +54,6 @@ class DataIngestion:
                             data = json.loads(line)
                             logger.debug(f"JSON parsed: {data}")
                             
-                            # Parse new data structure with 3 soil sensors
                             soil1 = data.get('soil1', 0)
                             soil2 = data.get('soil2', 0)
                             soil3 = data.get('soil3', 0)
@@ -67,9 +75,12 @@ class DataIngestion:
                             logger.warning(f"Received malformed JSON-like data: {line}")
             except serial.SerialException as e:
                 logger.error(f"Serial error: {e}. Attempting reconnect...")
-                self.serial_connection.close()
+                try:
+                    self.serial_connection.close()
+                except:
+                    pass
                 time.sleep(5)
-                self.connect_serial()
+                # Next iteration will handle reconnection
             except Exception as e:
                 logger.error(f"Unexpected error in ingestion loop: {e}")
             
@@ -77,18 +88,20 @@ class DataIngestion:
 
     def write_command(self, command):
         """Writes a command string to the serial port."""
-        if self.serial_connection and self.serial_connection.is_open:
-            try:
-                # Encode string to bytes and add newline
-                self.serial_connection.write(f"{command}\n".encode('utf-8'))
-                logger.info(f"Sent command to Arduino: {command}")
-                return True
-            except Exception as e:
-                logger.error(f"Failed to write command: {e}")
+        with self._write_lock:
+            if self.serial_connection and self.serial_connection.is_open:
+                try:
+                    # Encode string to bytes and add newline
+                    self.serial_connection.write(f"{command}\n".encode('utf-8'))
+                    self.serial_connection.flush() # Ensure it's sent
+                    logger.info(f"Sent command to Arduino: {command}")
+                    return True
+                except Exception as e:
+                    logger.error(f"Failed to write command '{command}': {e}")
+                    return False
+            else:
+                logger.warning(f"Serial connection to {config.SERIAL_PORT} not open. Cannot send command: {command}")
                 return False
-        else:
-            logger.warning("Serial connection not open. Cannot send command.")
-            return False
 
     def send_settings_to_arduino(self, settings):
         """Send all relevant settings to Arduino."""
