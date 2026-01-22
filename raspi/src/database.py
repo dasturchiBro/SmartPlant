@@ -7,9 +7,14 @@ class DatabaseManager:
         self.db_path = db_path
         self._init_db()
 
+    def _get_connection(self):
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
+        return conn
+
     def _init_db(self):
         """Initialize the database tables if they don't exist."""
-        conn = sqlite3.connect(self.db_path)
+        conn = self._get_connection()
         cursor = conn.cursor()
         
         # Sensor data table with 3 soil sensors
@@ -55,9 +60,9 @@ class DatabaseManager:
             'auto_water_enabled': '1',
             'auto_fan_enabled': '1',
             'auto_heater_enabled': '1',
-            'soil_threshold': '250',
+            'soil_threshold': '340',
             'fan_temp_threshold': '28.0',
-            'heater_temp_threshold': '18.0',
+            'heater_temp_threshold': '20.0',
             'watering_duration': '5'
         }
         
@@ -67,11 +72,17 @@ class DatabaseManager:
                 VALUES (?, ?, ?)
             ''', (name, value, time.time()))
             
-        # One-time migration: If threshold is still the old default (500), update to new (250)
+        # Migration: Ensure thresholds match user's latest requirements
         cursor.execute('''
             UPDATE user_settings 
-            SET setting_value = '250' 
-            WHERE setting_name = 'soil_threshold' AND setting_value = '500'
+            SET setting_value = '340' 
+            WHERE setting_name = 'soil_threshold' AND (setting_value = '500' OR setting_value = '250' OR setting_value = '300')
+        ''')
+        
+        cursor.execute('''
+            UPDATE user_settings 
+            SET setting_value = '20.0' 
+            WHERE setting_name = 'heater_temp_threshold' AND setting_value = '18.0'
         ''')
         
         conn.commit()
@@ -104,21 +115,35 @@ class DatabaseManager:
         conn.close()
 
     def get_recent_data(self, limit=1000):
-        """Get recent sensor readings."""
-        conn = sqlite3.connect(self.db_path)
+        """Get recent sensor readings as a list of dictionaries/Rows."""
+        conn = self._get_connection()
         cursor = conn.cursor()
         cursor.execute(f'''
-            SELECT * FROM (
-                SELECT timestamp, soil_moisture_1, soil_moisture_2, soil_moisture_3, soil_moisture_avg,
-                       temperature, humidity, light_intensity, water_level, fan_status, heater_status
-                FROM sensor_data 
-                ORDER BY timestamp DESC 
-                LIMIT ?
-            ) ORDER BY timestamp ASC
+            SELECT timestamp, soil_moisture_1, soil_moisture_2, soil_moisture_3, soil_moisture_avg,
+                   temperature, humidity, light_intensity, water_level, fan_status, heater_status
+            FROM sensor_data 
+            ORDER BY timestamp DESC 
+            LIMIT ?
         ''', (limit,))
         data = cursor.fetchall()
         conn.close()
-        return data
+        # Return in ascending order for trainer/predictor
+        return list(reversed(data))
+
+    def get_latest_reading(self):
+        """Get the absolute latest reading."""
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT timestamp, soil_moisture_1, soil_moisture_2, soil_moisture_3, soil_moisture_avg,
+                   temperature, humidity, light_intensity, water_level, fan_status, heater_status
+            FROM sensor_data 
+            ORDER BY timestamp DESC 
+            LIMIT 1
+        ''')
+        result = cursor.fetchone()
+        conn.close()
+        return result
 
     def get_all_data(self):
         """Get all sensor readings."""

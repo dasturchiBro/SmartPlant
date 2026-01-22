@@ -14,7 +14,8 @@
 #define FAN_INB_PIN 10     // Fan motor INB (User connected)
 #define HEATER_PIN 9      // Heater simulation (User's 4 Red LEDs)
 #define OK_STATUS_PIN 13  // OK Status (User's 4 Green LEDs)
-// Pin 3, 11, 12 are available
+#define AI_BUTTON_PIN 3   // AI Voice button (D3 recommended, D0 is Serial)
+// Pin 11, 12 are available
 
 // Analog Pins
 #define SOIL_PIN1 A0       // Soil moisture sensor 1 (User connected to A0)
@@ -35,9 +36,9 @@ const long interval = 5000;  // Send data every 5 seconds
 unsigned long previousMillis = 0;
 
 // User-configurable thresholds (can be updated via serial)
-int soilThreshold = 250;      // Auto-water if any soil > this value (DRY)
+int soilThreshold = 340;      // Auto-water if any soil > this value (DRY)
 float fanTempThreshold = 28.0;   // Fan ON if temp >= this
-float heaterTempThreshold = 18.0; // Heater ON if temp <= this
+float heaterTempThreshold = 20.0; // Heater ON if temp <= this
 
 // Automation flags (can be toggled via serial)
 bool autoWaterEnabled = true;
@@ -50,6 +51,9 @@ bool heaterStatus = false;
 int lastButtonState = HIGH;
 unsigned long lastDebounceTime = 0;
 const unsigned long debounceDelay = 50;
+int lastAiButtonState = HIGH;
+bool aiButtonPressed = false;
+bool wateringTriggered = false;
 
 // Non-blocking timers
 unsigned long lastWateringTime = 0;
@@ -84,6 +88,7 @@ void setup() {
   // Setup Water Level and Button (with pullup)
   pinMode(WATER_LEVEL_PIN, INPUT);
   pinMode(BUTTON_PIN, INPUT_PULLUP);
+  pinMode(AI_BUTTON_PIN, INPUT_PULLUP);
   
   // Setup I2C LCD
   lcd.init();
@@ -95,6 +100,29 @@ void setup() {
   
   delay(2000);
   lcd.clear();
+}
+
+void sendData(float h, float t, int s1, int s2, int s3, int savg, int wl) {
+  StaticJsonDocument<384> doc;
+  doc["timestamp"] = millis();
+  doc["soil1"] = s1;
+  doc["soil2"] = s2;
+  doc["soil3"] = s3;
+  doc["soil_avg"] = savg;
+  doc["temp"] = t;
+  doc["hum"] = h;
+  doc["water_level"] = wl;
+  doc["fan_status"] = fanStatus ? 1 : 0;
+  doc["heater_status"] = heaterStatus ? 1 : 0;
+  doc["button_pressed"] = aiButtonPressed ? 1 : 0;
+  doc["watering_triggered"] = wateringTriggered ? 1 : 0;
+  
+  serializeJson(doc, Serial);
+  Serial.println();
+  
+  // Reset flags after sending to prevent accidental double-triggering
+  aiButtonPressed = false;
+  wateringTriggered = false;
 }
 
 void loop() {
@@ -121,10 +149,23 @@ void loop() {
   if (buttonReading == LOW && lastButtonState == HIGH) {
     delay(50); // Small debounce delay
     if (digitalRead(BUTTON_PIN) == LOW) {
+      wateringTriggered = true; // Set flag for voice reporting
+      sendData(h, temp, soil1, soil2, soil3, soilAvg, waterLevel); // Push update IMMEDIATEY
       triggerWatering(3); // Manual water for 3 seconds
     }
   }
   lastButtonState = buttonReading;
+  
+  // ========== CHECK AI BUTTON FOR VOICE REPORT ==========
+  int aiButtonReading = digitalRead(AI_BUTTON_PIN);
+  if (aiButtonReading == LOW && lastAiButtonState == HIGH) {
+    delay(50); // Debounce
+    if (digitalRead(AI_BUTTON_PIN) == LOW) {
+      aiButtonPressed = true; 
+      sendData(h, temp, soil1, soil2, soil3, soilAvg, waterLevel); // Push update IMMEDIATEY
+    }
+  }
+  lastAiButtonState = aiButtonReading;
   
   // ========== AUTOMATION LOGIC ==========
   if (!isnan(temp)) {
@@ -157,8 +198,8 @@ void loop() {
   if (autoWaterEnabled && waterLevel == 1) {
     // Only check if we are NOT in the rest period
     if (currentMillis - lastWateringTime >= wateringRestPeriod) {
-      // Trigger if any sensor is ABOVE threshold (DRY)
-      if (soil1 > soilThreshold || soil2 > soilThreshold || soil3 > soilThreshold) {
+      // Trigger if average sensor is ABOVE threshold (DRY)
+      if (soilAvg > soilThreshold) {
         triggerWatering(5);
         lastWateringTime = millis(); // Reset rest timer
       }
@@ -183,28 +224,10 @@ void loop() {
     previousMillis = currentMillis;
     
     // Check if DHT read failed
-    if (isnan(h) || isnan(temp)) {
-      // Still send data with null values
-      h = 0;
-      temp = 0;
-    }
+    float sendHum = isnan(h) ? 0 : h;
+    float sendTemp = isnan(temp) ? 0 : temp;
     
-    // Create JSON document
-    StaticJsonDocument<384> doc;
-    doc["timestamp"] = millis();
-    doc["soil1"] = soil1;
-    doc["soil2"] = soil2;
-    doc["soil3"] = soil3;
-    doc["soil_avg"] = soilAvg;
-    doc["temp"] = temp;
-    doc["hum"] = h;
-    doc["water_level"] = waterLevel;
-    doc["fan_status"] = fanStatus ? 1 : 0;
-    doc["heater_status"] = heaterStatus ? 1 : 0;
-    
-    // Serialize and send
-    serializeJson(doc, Serial);
-    Serial.println();
+    sendData(sendHum, sendTemp, soil1, soil2, soil3, soilAvg, waterLevel);
   }
   
   // ========== CHECK FOR INCOMING COMMANDS ==========
@@ -284,10 +307,10 @@ void updateLCD(float temp, float hum, int soilAvg, int waterLevel) {
   }
   
   // Soil status in Uzbek
-  if (soilAvg < 500) {
-    lcd.print("Nam   "); // Wet
-  } else {
+  if (soilAvg >= soilThreshold) {
     lcd.print("Quruq "); // Dry
+  } else {
+    lcd.print("Nam   "); // Wet
   }
   
   // Line 2: Humidity and Water Status

@@ -84,9 +84,9 @@ class SmartPlantBot:
                 def interpret_soil(value):
                     if value < 200:
                         return "Juda nam \U0001F4A7"
-                    elif value < 250:
+                    elif value < 280:
                         return "Nam \U0001F7E2"
-                    elif value < 300:
+                    elif value < 340:
                         return "Quruq \U0001F7E1"
                     else:
                         return "Juda quruq \U0001F534"
@@ -200,9 +200,9 @@ class SmartPlantBot:
             
             # Thresholds
             msg += f"\U0001F4CA *Chegaralar:*\n"
-            msg += f"  Tuproq namligi: {settings.get('soil_threshold', 250)}\n"
+            msg += f"  Tuproq namligi: {settings.get('soil_threshold', 340)}\n"
             msg += f"  Fan harorati: {settings.get('fan_temp_threshold', 28.0)}°C\n"
-            msg += f"  Isitgich harorati: {settings.get('heater_temp_threshold', 18.0)}°C\n"
+            msg += f"  Isitgich harorati: {settings.get('heater_temp_threshold', 20.0)}°C\n"
             msg += f"  Sug'orish davomiyligi: {settings.get('watering_duration', 5)} s\n\n"
             
             # Automation status
@@ -268,10 +268,10 @@ class SmartPlantBot:
                         text="\u26A0 Qiymat 100 dan 1023 gacha bo'lishi kerak."
                     )
             else:
-                current = self.db_manager.get_setting('soil_threshold', 250)
+                current = self.db_manager.get_setting('soil_threshold', 340)
                 await context.bot.send_message(
                     chat_id=update.effective_chat.id,
-                    text=f"ℹ️ Joriy chegara: {current}\n\nO'zgartirish uchun: /tuproq_chegara 300"
+                    text=f"ℹ️ Joriy chegara: {current}\n\nO'zgartirish uchun: /tuproq_chegara 340"
                 )
         except ValueError:
             await context.bot.send_message(
@@ -332,10 +332,10 @@ class SmartPlantBot:
                         text="\u26A0 Harorat 5°C dan 25°C gacha bo'lishi kerak."
                     )
             else:
-                current = self.db_manager.get_setting('heater_temp_threshold', 18.0)
+                current = self.db_manager.get_setting('heater_temp_threshold', 20.0)
                 await context.bot.send_message(
                     chat_id=update.effective_chat.id,
-                    text=f"ℹ️ Joriy chegara: {current}°C\n\nO'zgartirish: /isitgich_harorat 15"
+                    text=f"ℹ️ Joriy chegara: {current}°C\n\nO'zgartirish: /isitgich_harorat 20"
                 )
         except ValueError:
             await context.bot.send_message(
@@ -489,7 +489,8 @@ class SmartPlantBot:
             logger.warning("Telegram Token not set. Bot will not start.")
             return
 
-        self.application = ApplicationBuilder().token(config.TELEGRAM_BOT_TOKEN).build()
+        # Build with increased timeouts to prevent httpcore.ConnectTimeout
+        self.application = ApplicationBuilder().token(config.TELEGRAM_BOT_TOKEN).connect_timeout(30).read_timeout(30).build()
         
         # Command handlers
         self.application.add_handler(CommandHandler('start', self.start))

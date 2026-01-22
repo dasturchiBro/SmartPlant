@@ -40,34 +40,26 @@ class AutomationController:
     def _check_and_act(self):
         """Check sensor data and execute automated actions based on settings."""
         # Get latest sensor data
-        recent_data = self.db_manager.get_recent_data(limit=1)
-        if not recent_data:
+        latest = self.db_manager.get_latest_reading()
+        if not latest:
             return
         
-        latest = recent_data[0]
-        # Unpack: timestamp, soil1, soil2, soil3, soil_avg, temp, hum, light, water_level, fan_status, heater_status
-        timestamp = latest[0]
-        soil1 = latest[1]
-        soil2 = latest[2]
-        soil3 = latest[3]
-        soil_avg = latest[4]
-        temp = latest[5]
-        hum = latest[6]
-        light = latest[7]
-        water_level = latest[8]
-        fan_status = latest[9]
-        heater_status = latest[10]
+        # Use keys from sqlite3.Row for safety and clarity
+        soil_avg = latest['soil_moisture_avg']
+        temp = latest['temperature']
+        hum = latest['humidity']
+        water_level = latest['water_level']
         
         # Get user settings
         settings = self.db_manager.get_all_settings()
         
         # Auto-watering logic
         if settings.get('auto_water_enabled') == '1' and water_level == 1:
-            soil_threshold = int(settings.get('soil_threshold', 250))
+            soil_threshold = int(settings.get('soil_threshold', 340))
             
-            # Check if any of the 3 sensors are ABOVE threshold (DRY)
-            if soil1 > soil_threshold or soil2 > soil_threshold or soil3 > soil_threshold:
-                logger.info(f"Auto-watering triggered: Soil sensors above threshold ({soil_threshold}) - DRY")
+            # Check if average soil moisture is ABOVE threshold (DRY)
+            if soil_avg > soil_threshold:
+                logger.info(f"Auto-watering triggered: Average soil moisture ({soil_avg}) above threshold ({soil_threshold}) - DRY")
                 duration = int(settings.get('watering_duration', 5))
                 self.ingestor.write_command(f"W{duration}")
                 

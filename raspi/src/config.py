@@ -1,7 +1,13 @@
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Determine project root and load environment variables from .env
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, ".env"))
 
 # Serial Configuration
-SERIAL_PORT = '/dev/ttyACM0'  # Default for Raspberry Pi, might need adjustment
+SERIAL_PORT = '/dev/ttyUSB0'  # Default for Raspberry Pi, might need adjustment
 # SERIAL_PORT = 'COM6'  # Default for Raspberry Pi, might need adjustment (e.g. COM3 on Windows)
 BAUD_RATE = 9600
 
@@ -19,7 +25,13 @@ TRAINING_INTERVAL_MINUTES = 60 * 24 # Train once a day
 PREDICTION_INTERVAL_SECONDS = 60 * 5 # Predict every 5 minutes
 
 # Thresholds (logic based if no model)
-MOISTURE_THRESHOLD_LOW = 300 # Example analog value, needs calibration
+MOISTURE_THRESHOLD_LOW = 340 # Example analog value, needs calibration
+HEATER_THRESHOLD_TEMP = 20.0 # Turn heater on if temp <= this
 
 # Telegram Configuration
 TELEGRAM_BOT_TOKEN = "8468978930:AAHL0ApuXAtyFuieDAPPTthWxT12EFFupBQ" # Get from @BotFather
+
+# AI & Voice Configuration
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+
+VOICE_NAME = "uz-UZ-MadinaNeural"

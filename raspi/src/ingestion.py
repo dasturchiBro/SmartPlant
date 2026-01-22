@@ -63,6 +63,8 @@ class DataIngestion:
                             water_level = data.get('water_level', 0)
                             fan_status = data.get('fan_status', 0)
                             heater_status = data.get('heater_status', 0)
+                            button_pressed = data.get('button_pressed', 0)
+                            watering_triggered = data.get('watering_triggered', 0)
                             
                             if soil1 is not None and temp is not None:
                                 self.db_manager.insert_sensor_data(
@@ -71,6 +73,16 @@ class DataIngestion:
                                     fan_status, heater_status
                                 )
                                 logger.info(f"Successfully saved reading to DB: T={temp}, S1={soil1}")
+                                
+                                # Trigger button callback if button was pressed
+                                if button_pressed == 1 and hasattr(self, 'on_button_pressed_callback'):
+                                    logger.info("AI Button press detected! Triggering callback.")
+                                    self.on_button_pressed_callback()
+                                
+                                # Trigger watering callback
+                                if watering_triggered == 1 and hasattr(self, 'on_watering_triggered_callback'):
+                                    logger.info("Watering trigger detected! Triggering callback.")
+                                    self.on_watering_triggered_callback()
                         except json.JSONDecodeError:
                             logger.warning(f"Received malformed JSON-like data: {line}")
             except serial.SerialException as e:
@@ -107,11 +119,11 @@ class DataIngestion:
         """Send all relevant settings to Arduino."""
         try:
             # Send threshold settings
-            self.write_command(f"SET_SOIL_THRESH:{settings.get('soil_threshold', 500)}")
+            self.write_command(f"SET_SOIL_THRESH:{settings.get('soil_threshold', 340)}")
             time.sleep(0.1)
             self.write_command(f"SET_FAN_TEMP:{settings.get('fan_temp_threshold', 28.0)}")
             time.sleep(0.1)
-            self.write_command(f"SET_HEATER_TEMP:{settings.get('heater_temp_threshold', 18.0)}")
+            self.write_command(f"SET_HEATER_TEMP:{settings.get('heater_temp_threshold', 20.0)}")
             time.sleep(0.1)
             
             # Send automation flags
