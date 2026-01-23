@@ -1,0 +1,56 @@
+========================================================================
+             Smart Plant - Aqlli O'simlik Parvarishi Tizimi
+========================================================================
+
+1. BU NIMA O'ZI?
+----------------
+Smart Plant - bu sizning o'simliklaringizga 24/7 qarab turadigan aqlli
+yordamchi. U o'simlikning tuprog'i quruqmi yoki harorat juda issiqmi -
+hammasidan xabardor bo'lib turadi va kerakli choralarni o'zi ko'radi.
+
+2. QANDAY MUAMMOLARNI HAL QILADI?
+--------------------------------
+- Unutuvchanlik: Agar siz o'simlikka suv quyishni unutsangiz, u nobud bo'lmaydi.
+- Iqlim o'zgarishi: To'satdan issiq bo'lib ketsa yoki kechasi sovuq tushsa,
+  tizim o'simlikni himoya qiladi.
+- Masofa: Siz uydan uzoqda bo'lsangiz ham, bog'ingizni telefoningiz orqali
+  nazorat qila olasiz.
+- Suv isrofi: Faqat o'simlikka kerak bo'lgandagina suv quyiladi.
+
+3. ASOSIY IMKONIYATLARI (XUSUSIYATLARI)
+---------------------------------------
+A) AVTOMATIK SUG'ORISH:
+Datchiklar tuproqning namligini o'lchaydi. Agar tuproq qurib qolsa,
+kichik nasos avtomatik ravishda suv quyadi.
+
+B) HARORAT VA HAVO NAZORATI:
+- Agar juda issiq bo'lsa (masalan, deraza oldida), ventilyator yoqiladi.
+- Agar juda sovuq bo'lsa, isitgich o'simlikni isitib turadi.
+Shunday qilib, o'simlik har doim o'zi uchun huzurbaxsh sharoitda bo'ladi.
+
+C) AI (SUN'IY INTELLEKT) OVOZLI YORDAMCHISI:
+Loyiha o'zbek tilida gapira oladi! Google Gemini texnologiyasi yordamida
+u shunchaki sonlarni o'qimaydi, balki: "Salom! Harorat yaxshi, lekin
+namlik bir oz kamayibdi, suv quyib yuborsangiz yaxshi bo'lardi" deb
+siz bilan muloqot qiladi.
+
+D) TELEGRAM BOT:
+Siz Telegram orqali xohlagan paytingizda:
+- O'simlikning holatini ko'rishingiz;
+- Masofadan turib suv quyishingiz;
+- Grafiklar orqali namlik qanday o'zgarayotganini kuzatishingiz mumkin.
+
+E) BASHORAT QILUVCHI MIYA:
+Tizim o'rganib boradi (Machine Learning). Masalan, u o'simlik qachon
+suv so'rashini oldindan biladi va stress holatiga tushishini bashorat qiladi.
+
+4. MUHIM NATIJALAR
+------------------
+- O'simliklar yaxshiroq va tezroq o'sadi.
+- Suv sarfi 40% gacha tejaladi.
+- Insonning vaqti va mehnati tejaladi.
+
+Xulosa qilib aytganda: Smart Plant - bu shunchaki texnika emas, balki
+har qanday sharoitda bog'ingizni rivojlantirishga yordam beradigan
+aqlli sherikdir!
+========================================================================

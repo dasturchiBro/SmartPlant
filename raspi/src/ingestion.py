@@ -50,6 +50,12 @@ class DataIngestion:
                     line = self.serial_connection.readline().decode('utf-8', errors='replace').strip()
                     if line:
                         logger.debug(f"Raw serial data: {line}")
+                        
+                        # Handle Command ACKs
+                        if line.startswith("ACK:") or line.startswith("STATUS:"):
+                            logger.info(f">>> Arduino Feedback: {line}")
+                            continue
+
                         try:
                             data = json.loads(line)
                             logger.debug(f"JSON parsed: {data}")
@@ -72,7 +78,7 @@ class DataIngestion:
                                     temp, hum, 0, water_level, 
                                     fan_status, heater_status
                                 )
-                                logger.info(f"Successfully saved reading to DB: T={temp}, S1={soil1}")
+                                logger.debug(f"Saved reading: T={temp}, S1={soil1}")
                                 
                                 # Trigger button callback if button was pressed
                                 if button_pressed == 1 and hasattr(self, 'on_button_pressed_callback'):
@@ -84,7 +90,8 @@ class DataIngestion:
                                     logger.info("Watering trigger detected! Triggering callback.")
                                     self.on_watering_triggered_callback()
                         except json.JSONDecodeError:
-                            logger.warning(f"Received malformed JSON-like data: {line}")
+                            if not (line.startswith("ACK:") or line.startswith("STATUS:")):
+                                logger.warning(f"Received malformed JSON-like data: {line}")
             except serial.SerialException as e:
                 logger.error(f"Serial error: {e}. Attempting reconnect...")
                 try:

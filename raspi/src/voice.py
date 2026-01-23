@@ -250,21 +250,34 @@ class VoiceModule:
             return self._generate_fallback_report(sensor_data)
 
     def say_status_instant(self, sensor_data):
-        """Instant playback of cache with age verification."""
-        # 1. Check if cache exists and is FRESH (less than 60 seconds old)
+        """Instant playback of cache with age and value verification."""
+        temp = sensor_data.get('temp', 0)
+        hum = sensor_data.get('hum', 0)
+        
+        # 1. Check if cache exists and is FRESH (less than 60 seconds old AND data matches)
         if os.path.exists(self.cached_audio):
             cache_age = time.time() - os.path.getmtime(self.cached_audio)
-            if cache_age < 60:
-                logger.info(f"Instant status trigger: Playing fresh cache (Age: {int(cache_age)}s).")
+            
+            # Check for data discrepancy since the cache was made
+            # (If temp changed by >0.4 or hum by >3%, the cache is "wrong")
+            data_mismatch = False
+            if self.last_temp is not None and abs(temp - self.last_temp) >= 0.4:
+                data_mismatch = True
+            if self.last_hum is not None and abs(hum - self.last_hum) >= 3.0:
+                data_mismatch = True
+
+            if cache_age < 60 and not data_mismatch:
+                logger.info(f"Instant status: Playing fresh cache (Age: {int(cache_age)}s).")
                 self.play_audio_sync(self.cached_audio)
                 # Refresh in background for NEXT time
                 import threading
                 threading.Thread(target=lambda: asyncio.run(self.refresh_status_cache(sensor_data)), daemon=True).start()
                 return True
             else:
-                logger.info(f"Instant status trigger: Cache is STALE (Age: {int(cache_age)}s). Generating live fallback...")
+                reason = "STALE" if cache_age >= 60 else "DATA MISMATCH"
+                logger.info(f"Instant status: Cache is {reason}. Generating live fallback...")
         else:
-            logger.info("Instant status trigger: No cache found. Generating live fallback...")
+            logger.info("Instant status: No cache found. Generating live fallback...")
             
         # 2. If no cache or stale, generate a FAST fallback report synchronously
         # This takes ~1 second but is 100% accurate.

@@ -1,0 +1,57 @@
+========================================================================
+            AMALIY SINOV VA KO'RGAZMA QO'LLANMASI (TEST GUIDE)
+========================================================================
+
+Ushbu loyihani Olimpiadada hakamlarga ko'rsatishdan oldin quyidagi 
+bosqichlarni ketma-ket bajarib, hammasi joyidaligiga ishonch hosil qiling.
+
+1-BOSQICH: TAYYORGARLIK (Power Up)
+----------------------------------
+1. Arduinoni Raspberry Pi'ga USB kabel orqali ulang.
+2. Raspberry Pi'ni elektr tarmog'iga ulang va internetga (Wi-Fi) ulanishini 
+   tekshiring (AI ovoz va Telegram bot uchun internet zarur).
+3. `raspi` papkasiga kiring va terminalda quyidagi buyruqni bering:
+   >>> python main.py
+
+2-BOSQICH: ILK MULOQOT (Welcome Speech)
+---------------------------------------
+Tizim ishga tushganda, u o'zbek tilida: "Salom! Men aqlli o'simlik 
+tizimi man..." deb sizni qutlashi kerak. 
+*   Agar ovoz chiqmasa: Dinamiklar ulanganini va ovoz balandligini tekshiring.
+
+3-BOSQICH: TELEGRAM BOTNI ULAB OLISH
+------------------------------------
+1. Telegram botingizni oching va `/start` buyrug'ini bering.
+2. Bot menyusini ko'rasiz. "Holat ko'rish" tugmasini bosing.
+3. Tizim sizni "Admin" deb eslab qoladi. Bu PROAKTIV ogohlantirishlar 
+   kelishi uchun juda muhim!
+
+4-BOSQICH: ASOSIY FUNKSIYALARNI TEKSHIRISH
+------------------------------------------
+- SUG'ORISH: Botdan "Suv quyish" tugmasini bosing. Nasos ishlashi kerak.
+- DATCHIKLAR: O'simlik datchigini suvga soling yoki quriting. Botdagi 
+  "Yangilash" tugmasini bosib, raqamlar o'zgarayotganini ko'ring.
+- OVOZLI HISOBOT: Tizimdagi AI hisobot tugmasini bosing (agar apparat 
+  qismi tayyor bo'lsa). Tizim o'sha zahoti holatni ovozli aytib beradi.
+
+5-BOSQICH: ML VA AI "WOW" EFFEKTINI TESTLASH
+--------------------------------------------
+Hakamlarga ML qanday ishlashini ko'rsatish uchun "Stress" holatini 
+sun'iy ravishda yarating:
+1. Datchikni tuproqdan sug'urib oling (havoda tuproq juda quruq deb o'ylaydi).
+2. Bir necha daqiqa kuting (ML tahlil qilishi uchun).
+3. Telegram bot sizga o'zi xabar yuborishi kerak: "🚨 O'simlikda stress 
+   aniqlandi! Tahlil: Tuproq namligi juda past..."
+4. Shundan so'ng ovozli tugmani bosing - Gemini bu holatni o'zbek tilida 
+   badiiy qilib tushuntirib beradi.
+
+6-BOSQICH: HAKAMLAR UCHUN "MAREKR" (Tips)
+------------------------------------------
+- Hakamlarga ayting: "Hozir men datchikni sug'urib oldim, tizim bu trendni 
+  tahlil qilib, 5 daqiqadan keyin o'simlik nobud bo'lishini bashorat qilmoqda".
+- `/debug` buyrug'ini tering va hakamlarga har bir sensorning raqamli 
+  qiymatlarini ko'rsating. Bu loyihangiz "shunchaki o'yinchoq" emas, 
+  jiddiy metrikalar bilan ishlayotganini isbotlaydi.
+
+OMAD! Ushbu ketma-ketlik sizni g'alaba sari yetaklaydi.
+========================================================================

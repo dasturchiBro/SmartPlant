@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="uz">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Smart Plant - Taqdimot</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css">
+
+    <style>
+        :root {
+            --accent-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        .reveal .slides {
+            text-align: left;
+        }
+
+        .reveal h1,
+        .reveal h2,
+        .reveal h3 {
+            text-transform: none;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .accent {
+            color: var(--accent-color);
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        ul {
+            list-style-type: none !important;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--accent-color);
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.5em;
+            vertical-align: middle;
+            background: var(--accent-color);
+            color: white;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 0.4em;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Title Slide -->
+            <section data-background-gradient="linear-gradient(to bottom, #1a2a1a, #0d0d0d)">
+                <h1 style="font-size: 2.5em;">🌿 <span class="accent">Smart Plant</span></h1>
+                <h3 style="opacity: 0.8;">Avtonom O'simlik Parvarishi Kelajagi</h3>
+                <div class="glass-card">
+                    <p>O'simliklarni aqlli parvarish qilish, monitoring va AI orqali muloqot qilish uchun to'liq
+                        ekotizim.</p>
+                </div>
+                <div class="footer">Loyiha Yakuni &bull; Muvaffaqiyatli Yakunlandi</div>
+            </section>
+
+            <!-- The Problem Slide -->
+            <section>
+                <h2>Mavjud Muammolar</h2>
+                <div class="glass-card">
+                    <p>O'simliklar juda nozik. An'anaviy dehqonchilik yoki uy bog'dorchiligida:</p>
+                    <ul>
+                        <li><span style="color: #ff5252;">To'satdan issiqlik:</span> O'simlikni bir necha soat ichida
+                            quritib qo'yishi mumkin.</li>
+                        <li><span style="color: #ff5252;">Inson omili:</span> Ko'p yoki kam suv quyish xatolari.</li>
+                        <li><span style="color: #ff5252;">Masofa muammosi:</span> Siz har doim ham nazorat qilish uchun
+                            o'sha yerda bo'la olmaysiz.</li>
+                    </ul>
+                </div>
+                <p class="fragment">Bizga 24/7 ishlovchi professional bog'bon yordamchisi kerak edi.</p>
+            </section>
+
+            <!-- The Solution: Overview -->
+            <section>
+                <h2><span class="accent">Smart Plant</span> Ekotizimi</h2>
+                <p>Hiss qiladigan, qaror qabul qiladigan va harakatlanadigan avtonom tizim.</p>
+                <div class="feature-grid">
+                    <div class="glass-card">
+                        <h4 class="accent">Hiss qiladi</h4>
+                        <p style="font-size: 0.7em;">Namlik, Harorat, Namlik darajasi va Yorug'lik darajasi.</p>
+                    </div>
+                    <div class="glass-card">
+                        <h4 class="accent">Qaror beradi</h4>
+                        <p style="font-size: 0.7em;">Raspberry Pi mantig'i + Google Gemini AI.</p>
+                    </div>
+                    <div class="glass-card">
+                        <h4 class="accent">Harakat qiladi</h4>
+                        <p style="font-size: 0.7em;">Nasoslar, Ventilyatorlar, Isitgichlar va Displeylar.</p>
+                    </div>
+                    <div class="glass-card">
+                        <h4 class="accent">Boshqaradi</h4>
+                        <p style="font-size: 0.7em;">Telegram orqali to'liq xavfsiz boshqaruv.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feature: Automatic Life Support -->
+            <section>
+                <h2>Avtomatik <span class="accent">Hayotni Ta'minlash</span></h2>
+                <div class="glass-card">
+                    <ul>
+                        <li><strong>Aqlli Sug'orish:</strong> Har soniyada tuproq namligini o'lchaydi. Faqat zarur
+                            bo'lganda nasosni yoqadi.</li>
+                        <li><strong>Iqlim Nazorati:</strong>
+                            <ul>
+                                <li style="font-size: 0.8em;">Juda issiqmi? 🧊 Ventilyator avtomatik ishga tushadi.</li>
+                                <li style="font-size: 0.8em;">Juda sovuqmi? 🔥 Isitgich o'simlik o'sishi uchun optimal
+                                    haroratni saqlaydi.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Xavfsizlik:</strong> Suv idishining bo'sh qolganini datchiklar darhol aniqlaydi.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Feature: AI Voice Assistant -->
+            <section>
+                <h2>O'simlik Bilan Gaplashing <span class="status-badge">AI YORDAMIDA</span></h2>
+                <div class="glass-card">
+                    <p><strong>Google Gemini</strong> va <strong>Edge-TTS</strong> texnologiyalari bilan ishlaydi.</p>
+                    <ul>
+                        <li><strong>O'zbek Tilida Muloqot:</strong> Tizim o'z holatini tabiiy o'zbek tilida tushuntirib
+                            beradi.</li>
+                        <li><strong>Xarakter:</strong> U shunchaki raqamlarni o'qimaydi, u "o'zini qanday his
+                            qilayotganini" aytadi.</li>
+                        <li><strong>Jonli Yangilanish:</strong> "Hozirgi holat haqida hisobot: Harorat 24 daraja. Tuproq
+                            namligi juda yaxshi!"</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Feature: Predictive Intelligence -->
+            <section>
+                <h2>Bashorat qiluvchi <span class="accent">Miya</span></h2>
+                <div class="glass-card">
+                    <p>Bu shunchaki "yoqish/o'chirish" emas. Bu Machine Learning tizimi.</p>
+                    <ul>
+                        <li><strong>Random Forest Modeli:</strong> O'tmishdagi ma'lumotlar asosida o'simlik stressini
+                            bashorat qiladi.</li>
+                        <li><strong>Trend Tahlili:</strong> Havoning namligiga qarab suv qancha vaqtda bug'lanishini
+                            tushunadi.</li>
+                        <li><strong>O'rganish:</strong> Qurilma qancha uzoq ishlasa, sug'orish jadvalini shunchalik
+                            yaxshi optimallashtiradi.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Feature: Telegram Bot -->
+            <section>
+                <h2>Bog'ingiz Cho'ntagingizda</h2>
+                <div class="glass-card">
+                    <p>Murakkab va qulay Telegram bot interfeysi:</p>
+                    <ul>
+                        <li><strong>Jonli Grafiklar:</strong> Namlik darajasini vaqt bo'yicha ko'ring.</li>
+                        <li><strong>Masofaviy Sug'orish:</strong> Dunyoning istalgan nuqtasidan sug'orishni amalga
+                            oshiring.</li>
+                        <li><strong>Sozlamalar:</strong> Chegaraviy qiymatlarni darhol o'zgartirish imkoniyati.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Real World Impact -->
+            <section data-background-color="#1a2a1a">
+                <h2>Amaliy Foydasi</h2>
+                <div class="feature-grid">
+                    <div class="glass-card">
+                        <h4 style="color: #ffd700;">Fermerlar uchun</h4>
+                        <p style="font-size: 0.6em;">Suv sarfini 40% gacha kamaytirish va hosilni sovuq urishidan
+                            asrash.</p>
+                    </div>
+                    <div class="glass-card">
+                        <h4 style="color: #ffd700;">Havaskorlar uchun</h4>
+                        <p style="font-size: 0.6em;">Hotirjam sayohat qiling. O'simliklaringiz xavfsiz va aloqada.</p>
+                    </div>
+                </div>
+                <h3 class="fragment fade-up accent" style="text-align: center; margin-top: 50px;">Muvaffaqiyatga
+                    erishildi.</h3>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/markdown/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+            autoPlayMedia: true,
+            transition: 'slide'
+        });
+    </script>
+</body>
+
+</html>

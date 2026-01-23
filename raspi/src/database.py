@@ -63,7 +63,8 @@ class DatabaseManager:
             'soil_threshold': '340',
             'fan_temp_threshold': '28.0',
             'heater_temp_threshold': '20.0',
-            'watering_duration': '5'
+            'watering_duration': '5',
+            'admin_chat_id': ''
         }
         
         for name, value in default_settings.items():

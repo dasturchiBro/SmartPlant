@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="uz">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Smart Plant - G'alaba Taqdimoti</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/blood.min.css">
+
+    <style>
+        :root {
+            --gold: #FFD700;
+            --mint: #00FFC6;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        .reveal .slides {
+            text-align: left;
+        }
+
+        .reveal h1,
+        .reveal h2 {
+            text-transform: none;
+            font-weight: 800;
+        }
+
+        .gold {
+            color: var(--gold);
+        }
+
+        .mint {
+            color: var(--mint);
+        }
+
+        .glass-box {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .stat-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid var(--mint);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 0 auto;
+        }
+
+        .ai-badge {
+            background: linear-gradient(45deg, #00C6FF, #0072FF);
+            color: white;
+            padding: 5px 20px;
+            border-radius: 50px;
+            font-size: 0.4em;
+            vertical-align: middle;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .pulse {
+            animation: pulse-animation 2s infinite;
+        }
+
+        @keyframes pulse-animation {
+            0% {
+                box-shadow: 0 0 0 0px rgba(0, 255, 198, 0.2);
+            }
+
+            100% {
+                box-shadow: 0 0 0 20px rgba(0, 255, 198, 0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Title Slide: The Hook -->
+            <section
+                data-background-image="https://images.unsplash.com/photo-1530836361253-efad5cb2fe51?auto=format&fit=crop&q=80&w=2070"
+                data-background-opacity="0.3">
+                <div class="glass-box">
+                    <h1 style="font-size: 3em;">SMART <span class="mint">PLANT</span></h1>
+                    <p style="font-size: 1.2em; letter-spacing: 5px;">KELAJAK AGRO-TEXNOLOGIYASI</p>
+                    <hr style="border-color: var(--mint); width: 100px; margin: 20px 0;">
+                    <p>Tabiat va Sun'iy Intellekt uchrashuvi.</p>
+                </div>
+            </section>
+
+            <!-- Global Problem: The Why -->
+            <section>
+                <h2>Global <span class="gold">Muammo</span></h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 50px;">
+                    <div class="glass-box" style="text-align: center;">
+                        <div class="stat-circle">70%</div>
+                        <p style="margin-top: 20px; font-size: 0.8em;">Global ichimlik suvining sug'orishga sarfi.</p>
+                    </div>
+                    <div class="glass-box" style="text-align: center;">
+                        <div class="stat-circle" style="border-color: #ff4d4d;">45%</div>
+                        <p style="margin-top: 20px; font-size: 0.8em;">Noto'g'ri tizim tufayli isrof bo'ladigan suv.</p>
+                    </div>
+                </div>
+                <p class="fragment" style="text-align: center; margin-top: 40px; color: #ff4d4d; font-weight: bold;">BU
+                    ISROFNI TO'XTATISH VAQTI KELDI!</p>
+            </section>
+
+            <!-- The Innovation: AI Voice -->
+            <section>
+                <h2>Innovatsiya: <span class="mint">AI Voice</span> <span class="ai-badge">Google Gemini</span></h2>
+                <div class="glass-box">
+                    <p>Biz o'simlikni <b>gapirishga</b> majbur qildik.</p>
+                    <ul>
+                        <li class="fragment"><b>O'zbek tili:</b> Tizim o'zbek tilida tabiiy muloqot qiladi.</li>
+                        <li class="fragment"><b>Gemini 1.5 Flash:</b> Ma'lumotlarni tahlil qilib, hissiy status beradi.
+                        </li>
+                        <li class="fragment"><b>Natija:</b> "Salom! Men juda chanqadim, iltimos menga suv quyib
+                            yuboring."</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Machine Learning: The Brain -->
+            <section>
+                <h2>Kelajakni <span class="gold">Bashorat Qilish</span></h2>
+                <div class="glass-box">
+                    <p>Bu shunchaki avtomatika emas, bu Machine Learning.</p>
+                    <div style="display: flex; align-items: center; justify-content: space-around; margin-top: 30px;">
+                        <div style="text-align: center;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2103/2103633.png" width="80"
+                                style="filter: invert(1);">
+                            <p style="font-size: 0.5em;">DATA COLLECTION</p>
+                        </div>
+                        <div class="mint" style="font-size: 2em;">&rarr;</div>
+                        <div style="text-align: center;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/3649/3649460.png" width="80"
+                                style="filter: invert(1);">
+                            <p style="font-size: 0.5em;">RANDOM FOREST ML</p>
+                        </div>
+                        <div class="mint" style="font-size: 2em;">&rarr;</div>
+                        <div style="text-align: center;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2892/2892540.png" width="80"
+                                style="filter: invert(1);">
+                            <p style="font-size: 0.5em;">PREDICTION</p>
+                        </div>
+                    </div>
+                    <p class="fragment"
+                        style="font-size: 0.8em; margin-top: 30px; border-left: 4px solid var(--mint); padding-left: 20px;">
+                        Tizim o'simlik qachon qurishini <b>bir necha soat oldin</b> biladi!
+                    </p>
+                </div>
+            </section>
+
+            <!-- Hardware: The Body -->
+            <section>
+                <h2>Texnik <span class="mint">Ekotizim</span></h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="glass-box" style="font-size: 0.7em;">
+                        <h4 class="mint">HARDWARE</h4>
+                        <ul>
+                            <li>Raspberry Pi 4 (Brain)</li>
+                            <li>Arduino Nano (Sensors)</li>
+                            <li>Pump & Fan & Heater</li>
+                        </ul>
+                    </div>
+                    <div class="glass-box" style="font-size: 0.7em;">
+                        <h4 class="mint">SOFTWARE</h4>
+                        <ul>
+                            <li>Python & SQLite</li>
+                            <li>Google Gemini API</li>
+                            <li>Telegram Bot API</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Impact: The Result -->
+            <section data-background-color="#000">
+                <h1 style="text-align: center;">BIZNING <span class="mint">NATIJA</span></h1>
+                <div class="glass-box pulse" style="text-align: center; border-color: var(--mint);">
+                    <h2 class="mint">40%</h2>
+                    <p>Suv tejash imkoniyati</p>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                    <div class="glass-box" style="font-size: 0.6em;">
+                        <p class="gold"><b>Xosildorlik: +25%</b></p>
+                    </div>
+                    <div class="glass-box" style="font-size: 0.6em;">
+                        <p class="gold"><b>Nazorat: 24/7</b></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Final Slide: Victory -->
+            <section data-background-gradient="radial-gradient(#1a2a1a, #000)">
+                <div style="text-align: center;">
+                    <h2 class="gold">SMART PLANT</h2>
+                    <h4 class="mint">G'alaba Sari Birinchi Qadam!</h4>
+                    <p style="font-size: 0.8em; opacity: 0.8; margin-top: 50px;">E'tiboringiz uchun rahmat!</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            transition: 'zoom'
+        });
+    </script>
+</body>
+
+</html>

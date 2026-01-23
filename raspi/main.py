@@ -30,7 +30,7 @@ def run_training_job(trainer):
     except Exception as e:
         logger.error(f"Training job failed: {e}")
 
-def run_prediction_job(db_manager, predictor, voice_module=None):
+def run_prediction_job(db_manager, predictor, voice_module=None, bot=None):
     try:
         # Get recent data
         recent_data = db_manager.get_recent_data(limit=20)
@@ -43,6 +43,9 @@ def run_prediction_job(db_manager, predictor, voice_module=None):
             
             if "Stress" in prediction:
                 logger.warning("!!! PLANT STRESS DETECTED - RECOMMEND WATERING !!!")
+                if bot:
+                    alert_msg = f"O'simlikda stress aniqlandi! 🌿\nBashorat: {prediction}\nTahlil: {explanation}"
+                    bot.send_alert_sync(alert_msg)
 
         # Update voice cache if sensor data is available
         if voice_module and recent_data:
@@ -180,7 +183,7 @@ def main():
     schedule.every(config.TRAINING_INTERVAL_MINUTES).minutes.do(run_training_job, trainer)
     
     # Schedule prediction every N minutes (also refreshes voice cache)
-    schedule.every(config.PREDICTION_INTERVAL_SECONDS).seconds.do(run_prediction_job, db_manager, predictor, voice)
+    schedule.every(config.PREDICTION_INTERVAL_SECONDS).seconds.do(run_prediction_job, db_manager, predictor, voice, bot)
 
     # Start Scheduler in a separate thread
     scheduler_thread = threading.Thread(target=scheduler_loop)

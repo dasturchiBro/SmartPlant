@@ -280,9 +280,11 @@ void setFan(bool state) {
     if (state) {
       digitalWrite(FAN_INA_PIN, HIGH);
       digitalWrite(FAN_INB_PIN, LOW);
+      Serial.println("STATUS:FAN_ON");
     } else {
       digitalWrite(FAN_INA_PIN, LOW);
       digitalWrite(FAN_INB_PIN, LOW);
+      Serial.println("STATUS:FAN_OFF");
     }
   }
 }
@@ -291,6 +293,11 @@ void setHeater(bool state) {
   if (heaterStatus != state) {
     heaterStatus = state;
     digitalWrite(HEATER_PIN, state ? HIGH : LOW);
+    if (state) {
+      Serial.println("STATUS:HEATER_ON");
+    } else {
+      Serial.println("STATUS:HEATER_OFF");
+    }
   }
 }
 
@@ -308,9 +315,9 @@ void updateLCD(float temp, float hum, int soilAvg, int waterLevel) {
   
   // Soil status in Uzbek
   if (soilAvg >= soilThreshold) {
-    lcd.print("Quruq "); // Dry
+    lcd.print("Quruq "); 
   } else {
-    lcd.print("Nam   "); // Wet
+    lcd.print("Nam   "); 
   }
   
   // Line 2: Humidity and Water Status
@@ -332,7 +339,7 @@ void updateLCD(float temp, float hum, int soilAvg, int waterLevel) {
 }
 
 void processSerialCommands() {
-  if (Serial.available() > 0) {
+  while (Serial.available() > 0) {
     String command = Serial.readStringUntil('\n');
     command.trim();
     
@@ -389,6 +396,15 @@ void processSerialCommands() {
     else if (command == "TEST_FAN_OFF") {
       setFan(false);
       Serial.println("ACK:FAN_TEST:0");
+    }
+    // Manual heater test commands
+    else if (command == "TEST_HEATER_ON") {
+      setHeater(true);
+      Serial.println("ACK:HEATER_TEST:1");
+    }
+    else if (command == "TEST_HEATER_OFF") {
+      setHeater(false);
+      Serial.println("ACK:HEATER_TEST:0");
     }
   }
 }

@@ -12,6 +12,7 @@ class SmartPlantBot:
         self.ingestor = ingestor
         self.automation_controller = automation_controller
         self.application = None
+        self.loop = None
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Start command with button menu."""
@@ -22,6 +23,12 @@ class SmartPlantBot:
             [InlineKeyboardButton("\u2753 Yordam", callback_data='show_help')]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
+        
+        # Save Chat ID as admin if not already set
+        current_admin = self.db_manager.get_setting('admin_chat_id', '')
+        if not current_admin:
+            self.db_manager.update_setting('admin_chat_id', update.effective_chat.id)
+            logger.info(f"Admin chat ID set to {update.effective_chat.id}")
         
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
@@ -84,9 +91,9 @@ class SmartPlantBot:
                 def interpret_soil(value):
                     if value < 200:
                         return "Juda nam \U0001F4A7"
-                    elif value < 280:
-                        return "Nam \U0001F7E2"
                     elif value < 340:
+                        return "Nam \u2705"
+                    elif value < 500:
                         return "Quruq \U0001F7E1"
                     else:
                         return "Juda quruq \U0001F534"
@@ -456,6 +463,24 @@ class SmartPlantBot:
         except Exception as e:
             await context.bot.send_message(chat_id=update.effective_chat.id, text=f"⚠️ Xatolik: {e}")
 
+    async def heatertest(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Manual heater test command."""
+        try:
+            if context.args:
+                state = context.args[0].lower()
+                if state in ['on', '1', 'yoq']:
+                    self.ingestor.write_command("TEST_HEATER_ON")
+                    await context.bot.send_message(chat_id=update.effective_chat.id, text="\U0001F525 Isitgich yoqildi (TEST rejim).")
+                elif state in ['off', '0', 'och']:
+                    self.ingestor.write_command("TEST_HEATER_OFF")
+                    await context.bot.send_message(chat_id=update.effective_chat.id, text="\U0001F525 Isitgich o'chirildi (TEST rejim).")
+                else:
+                    await context.bot.send_message(chat_id=update.effective_chat.id, text="⚠️ Ishlatish: /heatertest on/off")
+            else:
+                await context.bot.send_message(chat_id=update.effective_chat.id, text="ℹ️ Isitgich testi: /heatertest on yoki /heatertest off")
+        except Exception as e:
+            await context.bot.send_message(chat_id=update.effective_chat.id, text=f"⚠️ Xatolik: {e}")
+
     async def debug_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Show raw sensor data for troubleshooting."""
         try:
@@ -482,9 +507,33 @@ class SmartPlantBot:
             await context.bot.send_message(chat_id=update.effective_chat.id, text=msg, parse_mode='Markdown')
         except Exception as e:
             await context.bot.send_message(chat_id=update.effective_chat.id, text=f"⚠️ Xatolik: {e}")
+            
+    async def send_alert(self, text):
+        """Send a proactive alert to the admin chat ID."""
+        try:
+            admin_id = self.db_manager.get_setting('admin_chat_id')
+            if admin_id and self.application:
+                await self.application.bot.send_message(
+                    chat_id=admin_id,
+                    text=f"🚨 *Smart Plant Ogohlantirishi* 🚨\n\n{text}",
+                    parse_mode='Markdown'
+                )
+                logger.info(f"Alert sent to admin {admin_id}")
+            else:
+                logger.warning("Cannot send alert: admin_chat_id not set or bot not initialized.")
+        except Exception as e:
+            logger.error(f"Failed to send alert: {e}")
+
+    def send_alert_sync(self, text):
+        """Thread-safe version of send_alert."""
+        if self.loop and self.application:
+            asyncio.run_coroutine_threadsafe(self.send_alert(text), self.loop)
+        else:
+            logger.warning("Cannot send sync alert: Loop or Application not initialized.")
 
     async def _run(self):
         """Async internal runner."""
+        self.loop = asyncio.get_running_loop()
         if not config.TELEGRAM_BOT_TOKEN:
             logger.warning("Telegram Token not set. Bot will not start.")
             return
@@ -502,6 +551,7 @@ class SmartPlantBot:
         self.application.add_handler(CommandHandler('yordam', self.help_command))
         self.application.add_handler(CommandHandler('help', self.help_command))
         self.application.add_handler(CommandHandler('fannotest', self.fannotest))
+        self.application.add_handler(CommandHandler('heatertest', self.heatertest))
         self.application.add_handler(CommandHandler('debug', self.debug_command))
         
         # Settings commands (with aliases)
@@ -514,10 +564,10 @@ class SmartPlantBot:
             CommandHandler(['avto_suv', 'avtosuv', 'avto_water', 'avtowater', 'autowater'], lambda u, c: self.toggle_auto_mode(u, c, 'water'))
         )
         self.application.add_handler(
-            CommandHandler(['avto_fan', 'avtofan', 'autofan'], lambda u, c: self.toggle_auto_mode(u, c, 'fan'))
+            CommandHandler(['avto_fan', 'avtofan', 'autofan', 'auto_fan', 'avto_fan'], lambda u, c: self.toggle_auto_mode(u, c, 'fan'))
         )
         self.application.add_handler(
-            CommandHandler(['avto_isitgich', 'avtoisitgich', 'auto_heater', 'autoheater'], lambda u, c: self.toggle_auto_mode(u, c, 'heater'))
+            CommandHandler(['avto_isitgich', 'avtoisitgich', 'auto_heater', 'autoheater', 'avto_heater', 'avtoheater'], lambda u, c: self.toggle_auto_mode(u, c, 'heater'))
         )
         
         # Button handler

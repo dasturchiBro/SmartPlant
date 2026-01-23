@@ -1,0 +1,53 @@
+========================================================================
+            OLIMPIADA UCHUN NUTQ (pitch script) - SMART PLANT
+========================================================================
+
+KIRISH (0:00 - 0:30)
+------------------
+"Assalomu alaykum, hurmatli hakamlar va ishtirokchilar!
+Bilasizmi, bugungi kunda dunyoda ishlatiladigan ichimlik suvining 70% dan
+ortig'i qishloq xo'jaligiga sarflanadi? Lekin uning deyarli yarmi noto'g'ri
+sug'orish tufayli isrof bo'ladi. Men bugun sizga nafaqat suvni tejaydigan,
+balki o'simliklar bilan o'zbek tilida gaplashadigan kelajakni taqdim etaman.
+Bu - Smart Plant!"
+
+MUAMMO (0:30 - 1:00)
+-------------------
+"Hozirgi fermerlar va uy bog'bonlari duch keladigan eng katta muammo - bu
+noaniqlik. 'Suv quydimmi? U juda issiqda qolib ketmadimi?'. Birgina xato 
+tufayli butun bir hosil nobud bo'lishi mumkin. Bizning tizimimiz aynan mana 
+shu inson omilini yo'qotadi."
+
+YECHIM VA INNOVATSIYA (1:00 - 2:30)
+----------------------------------
+"Smart Plant - bu shunchaki avtomatizatsiya emas. Bu - INTELLЕKT!
+Bizning loyihamizda 3 ta asosiy innovatsion ustun bor:
+
+1. SUN'IY INTELLEKT (AI): Biz Google Gemini modelini integratsiya qildik. 
+   O'simlik shunchaki raqam ko'rsatmaydi, u o'zbek tilida o'z holati haqida 
+   hisobot beradi. Bu inson va tabiat o'rtasidagi yangi muloqot darajasidir.
+
+2. BASHORATLI ANALITIKA (ML): Random Forest algoritmi yordamida tizim 
+   o'tmishdan o'rganadi. U o'simlik qachon stressga tushishini suv yetmay 
+   qolishidan bir necha soat oldin bashorat qiladi.
+
+3. AVTONOM EKOTIZIM: IoT datchiklari, avtomatik sug'orish, issiqlikni 
+   sovitish va sovuqdan himoya qilish tizimi - barchasi bir butun bo'lib, 
+   o'simlik uchun 'Ideal Iqlim' yaratadi."
+
+MASOFAVIY NAZORAT VA AQLLI OGOHLANTIRISH (2:30 - 3:15)
+------------------------------------------------------
+"Telegram bot orqali bog'ingiz doim cho'ntagingizda. Grafiklar va masofaviy 
+boshqaruvdan tashqari, tizimimizda AQLLI OGOHLANTIRISH funksiyasi bor. 
+Agar ML modelimiz o'simlikda stressni bashorat qilsa, u birinchi bo'lib 
+sizga Telegram'dan 'Diqqat!' deb xabar yuboradi. Siz o'zingiz tekshirishingiz 
+shart emas, tizim o'zi sizni topadi!"
+
+XULOSA (3:00 - 3:30)
+-------------------
+"Smart Plant - bu suv sarfini 40% ga kamaytirish, hosildorlikni 25% ga 
+oshirish va eng muhimi, tabiatni texnologiya bilan asrashdir. Biz 
+qishloq xo'jaligini nafaqat aqlli, balki gapiradigan qildik! 
+
+E'tiboringiz uchun rahmat, men g'alaba sari birinchi qadamni tayyorladim!"
+========================================================================

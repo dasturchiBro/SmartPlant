@@ -1,0 +1,59 @@
+========================================================================
+           TEXNIK QO'LLANMA: SMART PLANT INTELLEKTI (HAKAMLAR UCHUN)
+========================================================================
+
+Ushbu loyiha shunchaki datchiklar yig'indisi emas, balki murakkab 
+ma'lumotlar tahlili va Sun'iy Intellekt (AI) asosida qurilgan.
+
+1. MA'LUMOTLARNI QAYTA ISHLASH (Feature Engineering)
+----------------------------------------------------
+Biz shunchaki "namlik 400 dan past bo'lsa, suv quy" degan oddiy qoidadan 
+foydalanmaymiz. Bizning ML modelimiz quyidagilarni hisobga oladi:
+- SOIL SLOPE (Nishablik): Tuproq namligining kamayish tezligi. Bu orqali 
+  suv bug'lanish kuchini aniqlaymiz.
+- AVG TEMP: Arduino va LM35 datchiklaridan olingan haroratlar o'rtacha 
+  qiymati (robastlik uchun).
+
+2. MASHINALI O'RGANISH: RANDOM FOREST CLASSIFIER
+------------------------------------------------
+Loyihamizda Random Forest algoritmi ishlatilgan. Nega aynan u?
+- Aniqlik: Bir nechta "Qarorlar daraxti" (Decision Trees) asosida ishlaydi.
+- Interpretability: Hakamlar uchun eng muhim joyi - biz har bir qarorni
+  tushuntirib bera olamiz (Explainable AI).
+
+3. EXPLAINABLE AI (XAI) - TUSHUNTIRILADIGAN INTELLEKT
+-----------------------------------------------------
+"Nega o'simlik stressda?" degan savolga qurilma shunday javob beradi:
+"Qaror 85% ehtimollik bilan 'Stress' deb topildi. Asosiy faktor: 
+Yorug'lik intensivligi (700 lux). Bu suvning tezroq bug'lanishiga 
+sabab bo'lmoqda."
+
+4. GOOGLE GEMINI INTEGRATSIYASI (Generative AI)
+-----------------------------------------------
+Tizim sensor ma'lumotlarini (JSON formatida) Google Gemini modeliga 
+yuboradi. Gemini bu sovuq raqamlardan INSONIY MATN yaratadi:
+- Input: {soil: 350, temp: 28, hum: 40}
+- Output: "Salom! Men bir oz tashnaman. Quyosh qizdirishi natijasida 
+  tuprog'im qurib boryapti. Iltimos, yordam bering!"
+
+5. PROAKTIV AGENTLIK (PROACTIVE AGENT)
+--------------------------------------
+Tizimimiz shunchaki passiv ma'lumot beruvchi emas. ML model 'Stress' 
+holatini aniqlagan zahoti, `SmartPlantBot` ob'ekti o'zining 
+`send_alert_sync` metodi orqali foydalanuvchiga Telegram orqali proaktiv 
+xabarnoma yuboradi. Bu 'Haqiqiy Vaqt Rejimi' (Real-time) va 'Sun'iy 
+Intellekt'ning uyg'unligidir.
+
+6. TIZIM ARXITEKTURASI (IOT PIPELINE)
+-------------------------------------
+1. Arduino Nano: Sensorlardan raw ma'lumot oladi.
+2. Raspberry Pi: Ma'lumotlarni SQLite bazasiga saqlaydi.
+3. Python Scikit-learn: Har 24 soatda yangi ma'lumotlar bilan ML modelni 
+   qayta o'qitadi.
+4. Edge-TTS: Geminidan olingan o'zbekcha matnni ovozga aylantiradi.
+
+HURMATLI HAKAMLAR, BU LOYIHA:
+- Suvni tejaydi (Smart Logic).
+- Kelajakni ko'ra oladi (Predictive ML).
+- Inson bilan muloqot qiladi (Generative AI).
+========================================================================
