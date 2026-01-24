@@ -8,7 +8,7 @@ load_dotenv(dotenv_path=os.path.join(BASE_DIR, ".env"))
 
 # Serial Configuration
 # SERIAL_PORT = '/dev/ttyUSB0'  # Default for Raspberry Pi, might need adjustment
-SERIAL_PORT = 'COM6'  # Default for Raspberry Pi, might need adjustment (e.g. COM3 on Windows)
+SERIAL_PORT = 'COM6'  # Windows port (not used on Raspberry Pi)
 BAUD_RATE = 9600
 
 # Database Configuration
