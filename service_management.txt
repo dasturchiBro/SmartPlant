@@ -1,0 +1,7 @@
+How to Manage Your Service
+Once installed, you can use these commands to control your bot:
+
+Check Status: sudo systemctl status smartplant.service (See if it's running)
+Stop it: sudo systemctl stop smartplant.service
+Restart it: sudo systemctl restart smartplant.service
+View Logs: journalctl -u smartplant.service -f (Useful for debugging)
