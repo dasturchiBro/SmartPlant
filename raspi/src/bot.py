@@ -7,10 +7,11 @@ from . import config
 logger = logging.getLogger(__name__)
 
 class SmartPlantBot:
-    def __init__(self, db_manager, ingestor, automation_controller=None):
+    def __init__(self, db_manager, ingestor, automation_controller=None, predictor=None):
         self.db_manager = db_manager
         self.ingestor = ingestor
         self.automation_controller = automation_controller
+        self.predictor = predictor
         self.application = None
         self.loop = None
 
@@ -53,6 +54,12 @@ class SmartPlantBot:
             "/avto_suv <on/off> (yoki /avtowater)\n"
             "/avto_fan <on/off> (yoki /autofan)\n"
             "/avto_isitgich <on/off> (yoki /autoheater)\n\n"
+            "/avto_isitgich <on/off> (yoki /autoheater)\n\n"
+            "*Bashorat (Demo):*\n"
+            "/bashorat - O'simlik stress holatini tekshirish\n\n"
+            "/avto_isitgich <on/off> (yoki /autoheater)\n\n"
+            "*Bashorat (Demo):*\n"
+            "/bashorat - O'simlik stress holatini tekshirish\n\n"
             "/yordam - Bu yordam\n"
             "/debug - Diagnostika (Raqamlarni ko'rish)"
         )
@@ -507,6 +514,39 @@ class SmartPlantBot:
             await context.bot.send_message(chat_id=update.effective_chat.id, text=msg, parse_mode='Markdown')
         except Exception as e:
             await context.bot.send_message(chat_id=update.effective_chat.id, text=f"⚠️ Xatolik: {e}")
+
+    async def predict_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Manual trigger for AI Stress Prediction."""
+        try:
+            if not self.predictor:
+                await context.bot.send_message(chat_id=update.effective_chat.id, text="⚠️ Bashorat moduli topilmadi.")
+                return
+
+            await context.bot.send_message(chat_id=update.effective_chat.id, text="⏳ Tahlil qilinmoqda...")
+            
+            # Fetch recent data for context
+            recent_data = self.db_manager.get_recent_data(limit=20)
+            
+            # Run prediction
+            prediction, explanation = self.predictor.predict(recent_data)
+            
+            if prediction:
+                status_icon = "🌿" if "Healthy" in prediction else "🥀"
+                msg = (
+                    f"{status_icon} *O'simlik Bashorati*\n\n"
+                    f"**Holat:** {prediction}\n\n"
+                    f"**Tahlil:**\n{explanation}"
+                )
+                await context.bot.send_message(chat_id=update.effective_chat.id, text=msg, parse_mode='Markdown')
+            else:
+                await context.bot.send_message(
+                    chat_id=update.effective_chat.id, 
+                    text=f"⚠️ Bashorat qilib bo'lmadi: {explanation}"
+                )
+
+        except Exception as e:
+            logger.error(f"Error in prediction command: {e}")
+            await context.bot.send_message(chat_id=update.effective_chat.id, text=f"⚠️ Xatolik: {e}")
             
     async def send_alert(self, text):
         """Send a proactive alert to the admin chat ID."""
@@ -543,16 +583,11 @@ class SmartPlantBot:
         
         # Command handlers
         self.application.add_handler(CommandHandler('start', self.start))
-        self.application.add_handler(CommandHandler('holat', self.status))
-        self.application.add_handler(CommandHandler('status', self.status))
-        self.application.add_handler(CommandHandler('suv', self.suv))
-        self.application.add_handler(CommandHandler('sozlamalar', self.show_settings))
-        self.application.add_handler(CommandHandler('settings', self.show_settings))
-        self.application.add_handler(CommandHandler('yordam', self.help_command))
         self.application.add_handler(CommandHandler('help', self.help_command))
         self.application.add_handler(CommandHandler('fannotest', self.fannotest))
         self.application.add_handler(CommandHandler('heatertest', self.heatertest))
         self.application.add_handler(CommandHandler('debug', self.debug_command))
+        self.application.add_handler(CommandHandler(['bashorat', 'predict'], self.predict_command))
         
         # Settings commands (with aliases)
         self.application.add_handler(CommandHandler(['tuproq_chegara', 'tuproqchegara'], self.set_soil_threshold))

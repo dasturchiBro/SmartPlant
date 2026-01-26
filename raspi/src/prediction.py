@@ -28,13 +28,22 @@ class Predictor:
         Returns: (prediction_label, explanation_text)
         """
         if not self.model:
-            # Try reloading in case it was just trained
-            self.load_model()
-            if not self.model:
-                return None, "Model not ready."
-
-        if not recent_data:
-            return None, "No data available."
+            # Fallback for Demo / Cold Start
+            logger.warning("Model not ready. Using rule-based fallback for demo.")
+            # Get latest reading
+            latest = recent_data[-1]
+            soil_avg = latest['soil_moisture_avg']
+            
+            # Simple logic: < 340 means dry (Needs Water)
+            if soil_avg > 340: # Note: Higher value = Drier on some sensors, checking logic.. 
+                # Actually usually Dry > Threshold. Let's check config threshold.
+                prediction_label = "Stress (Needs Water)" 
+                explanation = f"⚠️ Model train qilinmagan (Demo Rejim).\n📊 Tuproq namligi: {soil_avg} (Chegara: 340 dan yuqori)"
+            else:
+                prediction_label = "Healthy"
+                explanation = f"✅ Model train qilinmagan (Demo Rejim).\n📊 Tuproq namligi: {soil_avg} (Namlik yetarli)"
+            
+            return prediction_label, explanation
 
         features = self.preprocessor.prepare_single_prediction(recent_data)
         

@@ -129,8 +129,8 @@ def main():
     # Initialize automation controller
     automation = AutomationController(db_manager, ingestor)
     
-    # Initialize bot with automation controller
-    bot = SmartPlantBot(db_manager, ingestor, automation)
+    # Initialize bot with automation controller and predictor
+    bot = SmartPlantBot(db_manager, ingestor, automation, predictor)
 
     # Start Data Ingestion in a separate thread
     ingestion_thread = threading.Thread(target=ingestor.start_listening)
